@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Ayuda</title>
+  <link rel="stylesheet" href="../css/help.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="left-panel">
+      <div class="logo-container" onclick="window.location.href='../../index.html'">
+        <img src="../../assets/images/helenlogo.png" alt="Helen Logo" class="logo-image" />
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="help-content">
+        <h1>Centro de Ayuda - Helen</h1>
+        <p>Encuentra aquí ayuda sobre cómo utilizar Helen:</p>
+        <ul>
+          <li><strong>WiFi:</strong> Conéctate a redes disponibles desde el panel de ajustes.</li>
+          <li><strong>Información:</strong> Consulta datos sobre tu sistema.</li>
+          <li><strong>Ayuda:</strong> Explora esta página para asistencia.</li>
+        </ul>
+        <a href="../settings/settings.html">← Volver a ajustes</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../../jsSignHandler/SocketIO.js"></script>
+  <script src="../../jsSignHandler/eventConnector.js"></script>
+  <script src="../../jsSignHandler/actions.js"></script>
+</body>
+
+</html>

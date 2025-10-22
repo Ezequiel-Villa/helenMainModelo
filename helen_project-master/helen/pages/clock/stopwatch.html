@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronómetro</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css/stopwatch.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="header">
+                <div class="logo">
+                    <a href="../../index.html">
+                        <img class="logo-image" src="../../assets/images/helenlogo.png" alt="">
+                    </a>
+                </div>
+            </div>
+            
+            <div class="timer-container">
+                
+                <p class="date-section" hidden></p>
+                
+                <div class="current-timer">
+                    <i class="timer-icon bi bi-stopwatch"></i>
+                    <div class="time-container">
+                        <div class="timer-display">00:00:00</div>
+                        <div class="milliseconds">000</div>
+                    </div>
+                </div>
+                
+                <div class="timer-details">
+                    <p class="total-time">Tiempo Total: 00:00:00</p>
+                    <p class="lap-count">Vueltas: 0</p>
+                    <p class="avg-lap">Promedio: 00:00:00</p>
+                </div>
+                
+                <div class="timer-controls">
+                    <button class="control-btn reset-btn" disabled>
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        <span>Reiniciar</span>
+                    </button>
+                    <button class="control-btn start-btn">
+                        <i class="bi bi-play-fill"></i>
+                        <span>Iniciar</span>
+                    </button>
+                    <button class="control-btn lap-btn" disabled>
+                        <i class="bi bi-flag-fill"></i>
+                        <span>Vuelta</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="right-panel">
+            <div class="laps-section">
+                <h2>Registro de Vueltas</h2>
+                <div class="laps-container">
+                    <div class="laps-list">
+                        <!-- Las vueltas se agregarán dinámicamente desde el script -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-item">
+            <a href="alarm.html" class="alarma-link">
+                <i class="bi bi-alarm"></i>
+                <span>Alarma</span>
+            </a>
+        </div>
+        <div class="footer-item">
+            <a href="timer.html" class="temporizador-link">
+                <i class="bi bi-hourglass-split"></i>
+                <span>Temporizador</span>
+            </a>
+        </div>
+        <div class="footer-item">
+            <a href="clock.html" class="reloj-link">
+                <i class="bi bi-clock"></i>
+                <span>Reloj</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../jsFrontend/stopwatch.js"></script>
+    <script src="../../jsSignHandler/SocketIO.js" ></script>
+    <script src="../../jsSignHandler/eventConnector.js"></script>
+    <script src="../../jsSignHandler/actions.js"></script>
+    <script src="../../jsSignHandler/loadingScreenLoader.js"></script>
+</body>
+</html>

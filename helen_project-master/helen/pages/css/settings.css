@@ -1,0 +1,308 @@
+:root {
+  --primary: #6C5CE7;
+  --primary-light: #A29BFE;
+  --secondary: #00CECE;
+  --accent1: #FF8675;
+  --accent2: #FDCB6E;
+  --text: #ffffff;
+  --text-light: #dcdcdc;
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Product Sans', 'Segoe UI', sans-serif;
+  background: linear-gradient(145deg, var(--primary), var(--primary-light));
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  color: var(--text);
+}
+
+
+.left-panel {
+  padding: 40px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start; 
+}
+
+
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  height: 100%; 
+}
+
+
+.container {
+  width: 1024px;
+  height: 600px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  align-items: center;
+  position: absolute;
+}
+
+
+.logo-image {
+  width: 120px;
+  position: absolute;
+  top: 60px;
+  left:100;
+}
+
+
+
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; 
+  height: 100%;  
+  position: absolute;
+  left: 360px;
+  top: 10px;          
+}
+
+
+.settings-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.settings-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.settings-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 160px;
+  border-radius: 20px;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.settings-button i {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+.settings-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Botones individuales */
+.wifi {
+  background: linear-gradient(145deg, var(--secondary), #89f6f6);
+}
+
+.info {
+  background: linear-gradient(145deg, #ecaa2d, var(--accent2));
+}
+
+.help {
+  background: linear-gradient(145deg, var(--accent1), #fea498);
+}
+
+/* Modal WiFi */
+.wifi-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.wifi-modal-content {
+  background-color: #7D71E8;
+  border-radius: 20px;
+  width: 420px;
+  max-width: 90%;
+  max-height: 80vh;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.wifi-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.wifi-modal-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.close-button {
+  font-size: 24px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--text-light);
+  transition: color 0.2s;
+}
+
+.close-button:hover {
+  color: white;
+}
+
+.buttons-wifi {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+.refresh-button {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 15px;
+  color: white;
+  transition: all 0.2s;
+}
+
+.wifi-list {
+  max-height: 250px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 8px;
+}
+
+.wifi-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.05);
+  transition: 0.2s;
+}
+
+.wifi-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.wifi-item.selected {
+  background-color: rgba(108, 92, 231, 0.2);
+  border: 1px solid var(--primary-light);
+}
+
+.wifi-name {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.wifi-signal {
+  margin-right: 15px;
+  font-size: 20px;
+  color: white;
+}
+
+.password-input-container {
+  display: none;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.password-input {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  box-sizing: border-box;
+  background-color: white;
+  color: black;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #444;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.connect-button {
+  width: 100%;
+  background: linear-gradient(145deg, rgb(41, 230, 123), #a6f3a6);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.connect-button:disabled {
+  background: linear-gradient(145deg, #555, #666);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.loader {
+  display: none;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+    

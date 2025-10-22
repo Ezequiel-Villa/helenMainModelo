@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../css/weather.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Clima en Tiempo Real</title>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="header">
+                <div class="logo">
+                    <a href="../../index.html">
+                        <img class="logo-image" src="../../assets/images/helenlogo.png" alt="">
+                    </a>
+                </div>
+            </div>
+            <div class="weather-container">
+                <div class="weather-loading">
+                    <i class="bi bi-arrow-repeat spinner"></i>
+                    <p>Cargando datos del clima...</p>
+                </div>
+                <p class="date-section"></p>
+                <p class="location"></p>
+                <div class="current-weather">
+                    <i class="weather-icon bi"></i>
+                    <div class="temp-container">
+                        <p class="temperature"></p>
+                        <p class="status"></p>
+                    </div>
+                </div>
+                <div class="weather-details">
+                    <p class="feels-like"></p>
+                    <p class="humidity"></p>
+                    <p class="wind-speed"></p>
+                </div>
+            </div>
+        </div>
+        <div class="right-panel">
+            <br>
+            <br>
+            <div class="forecast-section">
+                <h2>Próximas horas</h2>
+                <br>
+                <div class="hourly-forecast"></div>
+            </div>
+            <div class="forecast-section">  
+                <h2>Próximos 3 días</h2>
+                <br>
+                <div class="daily-forecast">
+                    <div class="forecast-row">      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../jsFrontend/getWeather.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../../jsSignHandler/SocketIO.js" ></script>
+    <script src="../../jsSignHandler/eventConnector.js"></script>
+    <script src="../../jsSignHandler/actions.js"></script>
+    <script src="../../jsSignHandler/loadingScreenLoader.js"></script>
+</body>
+</html>

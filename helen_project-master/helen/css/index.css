@@ -1,0 +1,733 @@
+:root {
+    --primary: #6C5CE7;
+    --primary-light: #A29BFE;
+    --secondary: #00CECE;
+    --accent1: #FF8675;
+    --accent2: #FDCB6E;
+    --background: #FFFFFF;
+    --card-bg: #F9FAFC;
+    --text: #2D3436;
+    --text-light: #636E72;
+    --shadow: 0 10px 20px rgba(108, 92, 231, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Product Sans', 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    width: 1024px;
+    height: 600px;
+    padding: 30px;
+    overflow: hidden;
+    background-color: var(--card-bg);
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    box-shadow: var(--shadow);
+    background: linear-gradient(145deg, var(--primary), var(--primary-light));
+}
+
+.left-panel {
+    padding: 40px;
+    color: white;
+}
+
+
+.right-panel {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo img {
+    width: 60%;
+    /* margin-right: 16px; */
+    /* background-color: white; */
+    border-radius: 12px;
+    padding: 6px;
+}
+
+.logo-text {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: white;
+}
+
+.container-date-weather {
+    text-align: center;
+    /* Centra el texto horizontalmente */
+}
+
+.date-time {
+    margin-top: 20px;
+}
+
+.clock {
+    font-size: 64px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.date-section {
+    font-size: 18px;
+    font-weight: 500;
+    opacity: 0.9;
+    color: white;
+}
+
+.location {
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.9;
+    color: white;
+}
+
+.weather {
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+    padding: 16px 24px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    align-self: flex-start;
+    text-align: center;
+    justify-content: center;
+}
+
+.weather-icon {
+    font-size: 42px;
+    margin-right: 16px;
+}
+
+.weather-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.temperature {
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1;
+    color: white;
+}
+
+.status {
+    font-size: 16px;
+    opacity: 0.9;
+    margin-top: 4px;
+    color: white;
+}
+
+.main-button-container {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.main-button {
+    width: 75px;
+    height: 75px;
+    border-radius: 24px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+}
+
+.main-button:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.button-icon {
+    font-size: 32px;
+}
+
+.button-label {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+}
+
+.function-buttons-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 32px;
+    /* color: var(--text); */
+    color: white;
+}
+
+.function-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 24px;
+    flex: 1;
+}
+
+.function-button-container {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.function-button-container img {
+    width: 60%;
+}
+
+.function-button-container:nth-child(1) {
+    background: linear-gradient(145deg, var(--secondary), #89f6f6);
+}
+
+.function-button-container:nth-child(2) {
+    background: linear-gradient(145deg, var(--accent1), #fea498);
+}
+
+.function-button-container:nth-child(3) {
+    background: linear-gradient(145deg, rgb(41, 230, 123), #a6f3a6);
+}
+
+.function-button-container:nth-child(4) {
+    background: linear-gradient(145deg, #ecaa2d, var(--accent2));
+}
+
+.function-button-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.function-button {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: white;
+}
+
+.function-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+}
+
+.function-label {
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+}
+
+a {
+    text-decoration: none;
+}
+
+.decorative-circle {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    top: -40px;
+    right: -40px;
+}
+
+/* Estilos mejorados para el modal de WiFi */
+.wifi-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.wifi-modal-content {
+    background-color: var(--primary);
+    border-radius: 20px;
+    width: 420px;
+    max-width: 90%;
+    max-height: 80vh;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    color: var(--text);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.wifi-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.wifi-modal-header h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: white;
+}
+
+.close-button {
+    font-size: 24px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--text-light);
+    transition: color 0.2s;
+}
+
+.close-button:hover {
+    color: var(--text);
+}
+
+.wifi-status {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.wifi-status i {
+    font-size: 18px;
+    margin-right: 12px;
+    color: var(--primary-light);
+}
+
+.wifi-list {
+    max-height: 250px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: var(--primary-light);
+    padding: 8px;
+
+    /* Scrollbar styling */
+    scrollbar-width: thin;
+    /* Firefox */
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+    /* Firefox */
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) scrollbar styling */
+.wifi-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.wifi-list::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+}
+
+.wifi-list::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+.wifi-list::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.wifi-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.wifi-item:last-child {
+    margin-bottom: 0;
+}
+
+.wifi-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.wifi-item.selected {
+    background-color: rgba(108, 92, 231, 0.2);
+    border: 1px solid var(--primary-light);
+}
+
+.wifi-name {
+    flex-grow: 1;
+    font-weight: 500;
+    color: var(--text);
+    margin-right: 10px;
+}
+
+.wifi-signal {
+    margin-right: 15px;
+    font-size: 20px;
+    color: var(--primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+}
+
+.wifi-signal i {
+    font-size: 15px;
+}
+
+.wifi-secured {
+    color: var(--text-light);
+    font-size: 16px;
+}
+
+.wifi-secured i {
+    font-size: 12px;
+}
+
+.buttons-wifi {
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; */
+    justify-content: end;
+    margin-bottom: 15px;
+    width: auto;
+}
+
+/* Estilo simple para la red WiFi conectada actualmente */
+.connected-network {
+    background-color: rgba(175, 174, 175, 0.15);
+    border-left: 3px solid #ffffff;
+    border-right: 3px solid #ffffff;
+}
+
+/* Opcional: Estilo para la etiqueta "Conectado" */
+.connected-label {
+    color: #ffffff;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.refresh-button {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--text);
+    transition: all 0.2s;
+}
+
+.refresh-button:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+}
+
+.refresh-button i {
+    color: white;
+    font-size: 15px;
+}
+
+.wifi-switch {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.password-input-container {
+    display: none;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.password-input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    font-size: 15px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    transition: all 0.2s;
+}
+
+.password-input:focus {
+    border-color: var(--primary-light);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.2);
+}
+
+.password-input::placeholder {
+    color: white;
+    opacity: 0.5;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.toggle-password i {
+    font-size: 15px;
+}
+
+.connect-button {
+    width: 100%;
+    background: linear-gradient(145deg, rgb(41, 230, 123), #a6f3a6);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.connect-button:disabled {
+    background: linear-gradient(145deg, #555, #666);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.connect-button:not(:disabled):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 14px rgba(0, 0, 0, 0.2);
+}
+
+.loader {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    display: none;
+}
+
+.connecting-text {
+    display: none;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mejoras en el botón WiFi */
+.wifi-button-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+.wifi-button {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.wifi-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.25));
+}
+
+.wifi-icon {
+    font-size: 22px;
+    color: white;
+}
+
+/* Sección de estado */
+.device-status {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    /* Reducido de 10px a 8px */
+    padding: 8px 12px;
+    /* Reducido de 10px 15px a 8px 12px */
+}
+
+.device-status-text {
+    margin-left: 8px;
+    /* Reducido de 10px a 8px */
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    font-size: 14px;
+    /* Añadido para reducir tamaño de texto */
+}
+
+/* Etiqueta de estado */
+.status-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    /* Reducido de 2px 8px a 2px 6px */
+    border-radius: 8px;
+    /* Reducido de 10px a 8px */
+    font-size: 11px;
+    /* Reducido de 12px a 11px */
+    font-weight: bold;
+    margin-left: auto;
+}
+
+.status-on {
+    background-color: #4cd963;
+    box-shadow: 0 0 8px #4CD964;
+    /* Reducido de 0 0 10px a 0 0 8px */
+    color: rgba(255, 255, 255, 0.878);
+    font-weight: 700;
+}
+
+.status-off {
+    background-color: rgba(0, 0, 0, 0.45);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Estilos para el switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    /* Reducido de 50px a 46px */
+    height: 24px;
+    /* Reducido de 26px a 24px */
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    /* Reducido de 20px a 18px */
+    width: 18px;
+    /* Reducido de 20px a 18px */
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #4CD964;
+}
+
+input:checked+.slider {
+    box-shadow: 0 0 8px #4CD964;
+    /* Reducido de 0 0 10px a 0 0 8px */
+}
+
+input:checked+.slider:before {
+    transform: translateX(22px);
+    /* Ajustado para el nuevo tamaño */
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary: #6C5CE7;
+        --primary-light: #7D71E8;
+        --background: #111111;
+        --card-bg: #1A1B1E;
+        --text: #F5F5F7;
+        --text-light: #AAADB1;
+    }
+}

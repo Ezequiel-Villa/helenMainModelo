@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temporizador</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css/timer.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="header">
+                <div class="logo">
+                    <a href="../../index.html">
+                        <img class="logo-image" src="../../assets/images/helenlogo.png" alt="">
+                    </a>
+                </div>
+            </div>
+            
+            <div class="timer-container">
+                
+                <p class="date-section" hidden></p>
+                
+                <div class="current-timer">
+                    <i class="timer-icon bi bi-hourglass-split"></i>
+                    <div class="time-container">
+                        <div class="timer-display">00:00:00</div>
+                        <div class="milliseconds">00</div>
+                    </div>
+                </div>
+                
+                <div class="timer-setup">
+                    <div class="time-input-group">
+                        <div class="time-input">
+                            <span>Horas</span>
+                            <div class="input-control">
+                                <button class="control-arrow down-arrow"><i class="bi bi-chevron-left"></i></button>
+                                <input type="number" min="0" max="23" value="0" id="hours-input">
+                                <button class="control-arrow up-arrow"><i class="bi bi-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="time-input">
+                            <span>Minutos</span>
+                            <div class="input-control">
+                                <button class="control-arrow down-arrow"><i class="bi bi-chevron-left"></i></button>
+                                <input type="number" min="0" max="59" value="0" id="minutes-input">
+                                <button class="control-arrow up-arrow"><i class="bi bi-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="time-input">
+                            <span>Segundos</span>
+                            <div class="input-control">
+                                <button class="control-arrow down-arrow"><i class="bi bi-chevron-left"></i></button>
+                                <input type="number" min="0" max="59" value="0" id="seconds-input">
+                                <button class="control-arrow up-arrow"><i class="bi bi-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timer-controls">
+                    <button class="control-btn reset-btn" disabled>
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        <span>Reiniciar</span>
+                    </button>
+                    <button class="control-btn start-btn">
+                        <i class="bi bi-play-fill"></i>
+                        <span>Iniciar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="right-panel">
+            <div class="presets-section">
+                <h2>Temporizadores Guardados</h2>
+                <div class="presets-container">
+                    <div class="presets-list">
+                        <!-- Los presets se agregarán dinámicamente desde el script -->
+                    </div>
+                    <div class="add-preset-container">
+                        <button class="add-preset-btn">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Agregar Preset</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-item">
+            <a href="alarm.html" class="alarma-link">
+                <i class="bi bi-alarm"></i>
+                <span>Alarma</span>
+            </a>
+        </div>
+        <div class="footer-item">
+            <a href="clock.html" class="reloj-link">
+                <i class="bi bi-clock"></i>
+                <span>Reloj</span>
+            </a>
+        </div>
+        <div class="footer-item">
+            <a href="stopwatch.html" class="cronometro-link">
+                <i class="bi bi-stopwatch"></i>
+                <span>Cronómetro</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../jsFrontend/timer.js"></script>
+    <script src="../../jsSignHandler/SocketIO.js" ></script>
+    <script src="../../jsSignHandler/eventConnector.js"></script>
+    <script src="../../jsSignHandler/actions.js"></script>
+    <script src="../../jsSignHandler/loadingScreenLoader.js"></script>
+</body>
+</html>
