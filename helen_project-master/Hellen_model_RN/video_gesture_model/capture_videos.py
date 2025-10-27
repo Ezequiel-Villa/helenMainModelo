@@ -3,7 +3,11 @@
 Press ``s`` to start capturing a clip and ``q`` to exit. Each clip is saved to
 ``data/raw_videos/<gesture>/<gesture>_<timestamp>.mp4`` so it can later be
 processed into landmarks. Recording defaults are defined in :mod:`config`.
+
+Herramienta de consola para grabar videos cortos de cada gesto manteniendo ambas
+manos en cuadro; estos clips se usarán posteriormente para extraer landmarks.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -12,13 +16,29 @@ from datetime import datetime
 
 import cv2
 
-#from . import config
-import config
+# Permite ejecutar como paquete (python -m pkg.mod) o como script directo
+try:
+    from . import config
+    from .cli_utils import (
+        gesture_inventory,
+        print_inventory_table,
+        prompt_for_single_gesture,
+    )
+except ImportError:  # ejecución directa
+    import config  # type: ignore
+    from cli_utils import (  # type: ignore
+        gesture_inventory,
+        print_inventory_table,
+        prompt_for_single_gesture,
+    )
+
 
 def parse_args() -> argparse.Namespace:
+    """Interpretar los argumentos entregados por la línea de comandos."""
     parser = argparse.ArgumentParser(description="Record gesture clips with OpenCV")
     parser.add_argument(
         "gesture",
+        nargs="?",  # opcional: si falta, se pedirá por CLI
         help="Name of the gesture being recorded (used as folder prefix).",
     )
     parser.add_argument(
@@ -43,6 +63,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def record_clip(cap: cv2.VideoCapture, writer: cv2.VideoWriter, duration: float) -> None:
+    """Grabar un clip durante el tiempo indicado escribiendo cada frame en disco."""
     start_time = time.time()
     while time.time() - start_time < duration:
         ret, frame = cap.read()
@@ -55,11 +76,36 @@ def record_clip(cap: cv2.VideoCapture, writer: cv2.VideoWriter, duration: float)
 
 
 def main() -> None:
+    """Ejecutar el flujo principal de captura de video para un gesto concreto."""
     args = parse_args()
 
-    gesture_dir = config.VIDEOS_DIR / args.gesture
+    existing = gesture_inventory()
+
+    if args.gesture:
+        gesture_name = args.gesture
+    else:
+        if existing:
+            print("Señas registradas actualmente:")
+            print_inventory_table(existing)
+        else:
+            print(
+                "Aún no hay señas registradas. Se creará la carpeta cuando guardes el primer clip."
+            )
+        gesture_name = prompt_for_single_gesture(existing, show_table=False)
+
+    if gesture_name.strip() == "":
+        raise ValueError("El nombre de la seña no puede estar vacío.")
+
+    gesture_dir = config.VIDEOS_DIR / gesture_name
     gesture_dir.mkdir(parents=True, exist_ok=True)
 
+    existing_count = sum(1 for _ in gesture_dir.glob("*.mp4"))
+
+    print(
+        f"Seleccionada la seña '{gesture_name}'. Actualmente tiene {existing_count} clip(s)."
+    )
+
+    # Inicializamos la cámara con la resolución y FPS definidos en la configuración.
     cap = cv2.VideoCapture(args.device)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, config.FRAME_WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, config.FRAME_HEIGHT)
@@ -68,8 +114,11 @@ def main() -> None:
     if not cap.isOpened():
         raise RuntimeError("No se pudo acceder a la cámara.")
 
-    print(f"Grabando gesto '{args.gesture}'. Presiona 's' para capturar un clip, 'q' para salir.")
+    print(
+        f"Grabando gesto '{gesture_name}'. Presiona 's' para capturar un clip, 'q' para salir."
+    )
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    session_count = 0
 
     try:
         while True:
@@ -81,8 +130,9 @@ def main() -> None:
             key = cv2.waitKey(1) & 0xFF
 
             if key == ord("s"):
+                # Se genera un nombre único con sello de tiempo para cada grabación.
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                video_path = gesture_dir / f"{args.gesture}_{timestamp}.mp4"
+                video_path = gesture_dir / f"{gesture_name}_{timestamp}.mp4"
                 writer = cv2.VideoWriter(
                     str(video_path),
                     fourcc,
@@ -92,7 +142,11 @@ def main() -> None:
                 print(f"➡️  Grabando clip en {video_path}")
                 record_clip(cap, writer, args.duration)
                 writer.release()
-                print("✅ Clip guardado\n")
+                session_count += 1
+                total_count = existing_count + session_count
+                print(
+                    f"✅ Clip guardado. Clips en esta sesión: {session_count}. Total acumulado: {total_count}.\n"
+                )
 
             elif key == ord("q"):
                 print("Grabación finalizada por el usuario.")
@@ -105,3 +159,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    
