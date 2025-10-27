@@ -2,9 +2,11 @@
 
 This module centralises local paths and AWS placeholders so all scripts share
 consistent defaults. Adjust the values here before running any of the scripts.
+
+Este módulo define constantes reutilizables para que todos los scripts
+compartan las mismas rutas y parámetros por defecto dentro del pipeline.
 """
-# Este módulo define constantes reutilizables para que todos los scripts
-# compartan las mismas rutas y parámetros por defecto dentro del pipeline.
+
 from pathlib import Path
 
 # Root directory for generated assets (videos, extracted features, models).
@@ -45,3 +47,4 @@ S3_MODEL_PREFIX = "models/gesture_videos"
 # Se crean todas las carpetas necesarias si aún no existen en el sistema de archivos.
 for path in [DATA_DIR, VIDEOS_DIR, FRAMES_DIR, FEATURES_DIR, MODELS_DIR, LOGS_DIR]:
     path.mkdir(parents=True, exist_ok=True)
+    

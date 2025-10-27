@@ -1,6 +1,8 @@
-"""Train a TensorFlow model using landmark sequences extracted from gesture videos."""
-# Script encargado de cargar el dataset de landmarks, definir la red en TensorFlow
-# y guardar el modelo entrenado junto con su historial y etiquetas.
+"""Train a TensorFlow model using landmark sequences extracted from gesture videos.
+
+Script encargado de cargar el dataset de landmarks, definir la red en TensorFlow
+y guardar el modelo entrenado junto con su historial y etiquetas.
+"""
 from __future__ import annotations
 
 import argparse
@@ -12,8 +14,13 @@ from typing import Tuple
 import numpy as np
 import tensorflow as tf
 
-from . import config
-from .cli_utils import summarise_distribution
+# Imports robustos: funcionan como paquete o como script directo
+try:
+    from . import config
+    from .cli_utils import summarise_distribution
+except Exception:
+    import config  # type: ignore
+    from cli_utils import summarise_distribution  # type: ignore
 
 
 def parse_args() -> argparse.Namespace:
@@ -122,12 +129,12 @@ def main() -> None:
     num_classes = int(np.max(np.concatenate([y_train, y_val])) + 1)
 
     model = build_model(
-        num_classes,
-        sequence_length,
-        feature_dim,
-        tuple(args.lstm_units),
-        args.dense_units,
-        args.dropout,
+        num_classes=num_classes,
+        sequence_length=sequence_length,
+        feature_dim=feature_dim,
+        lstm_units=tuple(args.lstm_units),
+        dense_units=args.dense_units,
+        dropout=args.dropout,
     )
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=args.learning_rate),
@@ -135,9 +142,11 @@ def main() -> None:
         metrics=["accuracy"],
     )
 
+    # Resumen útil
     train_samples = len(X_train)
     val_samples = len(X_val)
     total_samples = train_samples + val_samples
+
     def map_distribution(text: str) -> str:
         parts = []
         for segment in text.split(", "):
@@ -156,20 +165,28 @@ def main() -> None:
     print(f"   • Distribución etiquetas (train): {train_dist}")
     print(f"   • Distribución etiquetas (val): {val_dist}")
     print("Hiperparámetros seleccionados:")
-    print(
-        f"   • Épocas={args.epochs}, Batch={args.batch_size}, LR={args.learning_rate}, Dropout={args.dropout}"
-    )
+    print(f"   • Épocas={args.epochs}, Batch={args.batch_size}, LR={args.learning_rate}, Dropout={args.dropout}")
     print(f"   • LSTM={tuple(args.lstm_units)}, Dense={args.dense_units}")
 
+    # ==== Callbacks (Keras 3 friendly) ====
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
     callbacks = [
+        # Checkpoint de MEJORES PESOS (ligero, evita requerir .keras)
         tf.keras.callbacks.ModelCheckpoint(
-            filepath=str(config.MODELS_DIR / "checkpoint"),
+            filepath=str(config.MODELS_DIR / f"best_weights_{timestamp}.weights.h5"),
             monitor="val_accuracy",
+            mode="max",
             save_best_only=True,
-            save_weights_only=False,
+            save_weights_only=True,
+            verbose=1,
         ),
-        tf.keras.callbacks.TensorBoard(log_dir=str(config.LOGS_DIR / datetime.now().strftime("logs_%Y%m%d_%H%M%S"))),
-        tf.keras.callbacks.EarlyStopping(patience=10, restore_best_weights=True, monitor="val_accuracy"),
+        tf.keras.callbacks.TensorBoard(
+            log_dir=str(config.LOGS_DIR / datetime.now().strftime("logs_%Y%m%d_%H%M%S"))
+        ),
+        tf.keras.callbacks.EarlyStopping(
+            patience=10, restore_best_weights=True, monitor="val_accuracy", mode="max"
+        ),
     ]
 
     history = model.fit(
@@ -182,11 +199,21 @@ def main() -> None:
         verbose=2,
     )
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    # ==== Guardado final en SavedModel (carpeta) ====
     model_dir = config.MODELS_DIR / f"gesture_model_{timestamp}"
-    model.save(model_dir)
-    print(f"💾 Modelo guardado en {model_dir}")
+    model.export(model_dir)  # SavedModel en directorio
+    print(f"💾 Modelo (SavedModel) guardado en {model_dir}")
 
+    # # (Opcional) Guarda también los pesos finales como archivo
+    # final_weights = model_dir / "final.weights.h5"
+    # model.save_weights(final_weights)
+    # print(f"🧱 Pesos finales guardados en {final_weights}")
+
+    # (Opcional) Archivo único Keras 3, por portabilidad
+    # model.save(model_dir / "final_model.keras")
+    # print(f"📦 Modelo completo en archivo único guardado en {model_dir / 'final_model.keras'}")
+
+    # Historial y etiquetas
     history_path = model_dir / "training_history.json"
     with history_path.open("w", encoding="utf-8") as fp:
         json.dump(history.history, fp, indent=2)

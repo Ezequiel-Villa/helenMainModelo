@@ -5,8 +5,7 @@ converts each clip into a fixed-length sequence of 3D landmarks for up to two
 hands. The resulting tensors and labels are stored in ``data/features`` and will
 be consumed by the TensorFlow training script.
 """
-# Rutina que prepara los videos capturados generando tensores de landmarks para
-# que el modelo pueda aprender a partir de secuencias con ambas manos.
+
 from __future__ import annotations
 
 import argparse
@@ -19,8 +18,13 @@ import cv2
 import mediapipe as mp
 import numpy as np
 
-from . import config
-from .cli_utils import gesture_inventory, prompt_for_multiple_gestures
+# Permite ejecutar como paquete (python -m pkg.mod) o como script directo
+try:
+    from . import config
+    from .cli_utils import gesture_inventory, prompt_for_multiple_gestures
+except ImportError:  # ejecución directa
+    import config  # type: ignore
+    from cli_utils import gesture_inventory, prompt_for_multiple_gestures  # type: ignore
 
 
 @dataclass
@@ -35,7 +39,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Extract landmarks from gesture clips")
     parser.add_argument(
         "gestures",
-        nargs="*",
+        nargs="*",  # opcional: si faltan, se pedirá por CLI con cli_utils
         help="Gesture folder names located under data/raw_videos",
     )
     parser.add_argument(
@@ -53,11 +57,15 @@ def parse_args() -> argparse.Namespace:
 
 
 def normalise_landmarks(landmarks: np.ndarray) -> np.ndarray:
-    """Normalise coordinates relative to the wrist of each hand."""
-    # Se desplaza cada coordenada para que la muñeca de cada mano actúe como origen.
+    """Normalise coordinates relative to the wrist of each hand.
+
+    Se desplaza cada coordenada para que la muñeca de cada mano actúe como origen.
+    """
     if landmarks.size == 0:
         return landmarks
-    reshaped = landmarks.reshape(config.MAX_HANDS, config.NUM_HAND_LANDMARKS, config.LANDMARK_DIM)
+    reshaped = landmarks.reshape(
+        config.MAX_HANDS, config.NUM_HAND_LANDMARKS, config.LANDMARK_DIM
+    )
     for hand_idx in range(config.MAX_HANDS):
         hand_landmarks = reshaped[hand_idx]
         if not hand_landmarks.any():
@@ -67,7 +75,9 @@ def normalise_landmarks(landmarks: np.ndarray) -> np.ndarray:
     return reshaped.reshape(-1)
 
 
-def extract_from_video(video_path: Path, hands: mp.solutions.hands.Hands, sequence_length: int) -> np.ndarray:
+def extract_from_video(
+    video_path: Path, hands: mp.solutions.hands.Hands, sequence_length: int
+) -> np.ndarray:
     """Procesar un video y devolver una secuencia con landmarks normalizados."""
     cap = cv2.VideoCapture(str(video_path))
     frames: List[np.ndarray] = []
@@ -79,13 +89,21 @@ def extract_from_video(video_path: Path, hands: mp.solutions.hands.Hands, sequen
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = hands.process(frame_rgb)
 
-        frame_features = np.zeros((config.MAX_HANDS, config.NUM_HAND_LANDMARKS, config.LANDMARK_DIM), dtype=np.float32)
+        frame_features = np.zeros(
+            (config.MAX_HANDS, config.NUM_HAND_LANDMARKS, config.LANDMARK_DIM),
+            dtype=np.float32,
+        )
         if results.multi_hand_landmarks and results.multi_handedness:
             ordering: Dict[str, int] = {"Left": 0, "Right": 1}
-            for hand_landmarks, handedness in zip(results.multi_hand_landmarks, results.multi_handedness):
+            for hand_landmarks, handedness in zip(
+                results.multi_hand_landmarks, results.multi_handedness
+            ):
                 label = handedness.classification[0].label
                 hand_idx = ordering.get(label, 0)
-                coords = np.array([[lm.x, lm.y, lm.z] for lm in hand_landmarks.landmark], dtype=np.float32)
+                coords = np.array(
+                    [[lm.x, lm.y, lm.z] for lm in hand_landmarks.landmark],
+                    dtype=np.float32,
+                )
                 frame_features[hand_idx] = coords
 
         frames.append(normalise_landmarks(frame_features.flatten()))
@@ -101,7 +119,9 @@ def extract_from_video(video_path: Path, hands: mp.solutions.hands.Hands, sequen
     if len(frames_array) >= sequence_length:
         return frames_array[:sequence_length]
 
-    padding = np.zeros((sequence_length - len(frames_array), frames_array.shape[1]), dtype=np.float32)
+    padding = np.zeros(
+        (sequence_length - len(frames_array), frames_array.shape[1]), dtype=np.float32
+    )
     return np.vstack([frames_array, padding])
 
 
@@ -127,13 +147,17 @@ def main() -> None:
         for gesture in gestures:
             gesture_dir = config.VIDEOS_DIR / gesture
             if not gesture_dir.exists():
-                raise FileNotFoundError(f"No se encontró la carpeta de videos para el gesto '{gesture}'.")
+                raise FileNotFoundError(
+                    f"No se encontró la carpeta de videos para el gesto '{gesture}'."
+                )
 
             before = len(samples)
             for video_path in sorted(gesture_dir.glob("*.mp4")):
                 # Extraemos los landmarks por frame y los asociamos a la etiqueta correspondiente.
                 features = extract_from_video(video_path, hands, args.sequence_length)
-                samples.append(Sample(features=features, label=label_map[gesture], gesture=gesture))
+                samples.append(
+                    Sample(features=features, label=label_map[gesture], gesture=gesture)
+                )
                 print(f"✅ Procesado {video_path}")
 
             if len(samples) == before:

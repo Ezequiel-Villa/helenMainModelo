@@ -3,9 +3,11 @@
 Press ``s`` to start capturing a clip and ``q`` to exit. Each clip is saved to
 ``data/raw_videos/<gesture>/<gesture>_<timestamp>.mp4`` so it can later be
 processed into landmarks. Recording defaults are defined in :mod:`config`.
+
+Herramienta de consola para grabar videos cortos de cada gesto manteniendo ambas
+manos en cuadro; estos clips se usarán posteriormente para extraer landmarks.
 """
-# Herramienta de consola para grabar videos cortos de cada gesto manteniendo ambas
-# manos en cuadro; estos clips se usarán posteriormente para extraer landmarks.
+
 from __future__ import annotations
 
 import argparse
@@ -14,8 +16,21 @@ from datetime import datetime
 
 import cv2
 
-from . import config
-from .cli_utils import gesture_inventory, print_inventory_table, prompt_for_single_gesture
+# Permite ejecutar como paquete (python -m pkg.mod) o como script directo
+try:
+    from . import config
+    from .cli_utils import (
+        gesture_inventory,
+        print_inventory_table,
+        prompt_for_single_gesture,
+    )
+except ImportError:  # ejecución directa
+    import config  # type: ignore
+    from cli_utils import (  # type: ignore
+        gesture_inventory,
+        print_inventory_table,
+        prompt_for_single_gesture,
+    )
 
 
 def parse_args() -> argparse.Namespace:
@@ -23,7 +38,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Record gesture clips with OpenCV")
     parser.add_argument(
         "gesture",
-        nargs="?",
+        nargs="?",  # opcional: si falta, se pedirá por CLI
         help="Name of the gesture being recorded (used as folder prefix).",
     )
     parser.add_argument(
@@ -73,7 +88,9 @@ def main() -> None:
             print("Señas registradas actualmente:")
             print_inventory_table(existing)
         else:
-            print("Aún no hay señas registradas. Se creará la carpeta cuando guardes el primer clip.")
+            print(
+                "Aún no hay señas registradas. Se creará la carpeta cuando guardes el primer clip."
+            )
         gesture_name = prompt_for_single_gesture(existing, show_table=False)
 
     if gesture_name.strip() == "":
@@ -142,3 +159,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    

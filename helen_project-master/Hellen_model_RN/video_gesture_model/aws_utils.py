@@ -4,9 +4,10 @@ These functions are not executed automatically but provide a ready-to-use
 interface once AWS credentials are configured via environment variables or the
 standard AWS CLI configuration. They support uploading datasets, models and
 training artefacts to dedicated buckets.
+
+Conjunto de utilidades para subir datasets y modelos al almacenamiento S3 de AWS
+cuando el proyecto se conecte a la nube.
 """
-# Conjunto de utilidades para subir datasets y modelos al almacenamiento S3 de AWS
-# cuando el proyecto se conecte a la nube.
 from __future__ import annotations
 
 import argparse
@@ -16,7 +17,11 @@ from typing import Iterable
 import boto3
 from botocore.exceptions import BotoCoreError, NoCredentialsError
 
-from . import config
+# Imports robustos: paquete o script directo
+try:
+    from . import config
+except Exception:
+    import config  # type: ignore
 
 
 s3_client = boto3.client("s3", region_name=config.AWS_REGION)
@@ -28,7 +33,8 @@ def upload_files(paths: Iterable[Path], bucket: str, prefix: str) -> None:
         if not path.exists():
             print(f"⚠️  Se omitió {path} porque no existe.")
             continue
-        key = f"{prefix}/{path.name}"
+        # Aseguramos separadores POSIX en la clave S3
+        key = f"{prefix.rstrip('/')}/{path.name}"
         try:
             s3_client.upload_file(str(path), bucket, key)
             print(f"⬆️  {path} -> s3://{bucket}/{key}")
@@ -50,7 +56,7 @@ def upload_model(model_dir: Path) -> None:
     files = [p for p in model_dir.rglob("*") if p.is_file()]
     for file_path in files:
         relative_path = file_path.relative_to(model_dir)
-        key = f"{config.S3_MODEL_PREFIX}/{model_dir.name}/{relative_path.as_posix()}"
+        key = f"{config.S3_MODEL_PREFIX.rstrip('/')}/{model_dir.name}/{relative_path.as_posix()}"
         try:
             s3_client.upload_file(str(file_path), config.S3_MODELS_BUCKET, key)
             print(f"⬆️  {file_path} -> s3://{config.S3_MODELS_BUCKET}/{key}")

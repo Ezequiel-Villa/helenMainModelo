@@ -26,6 +26,19 @@ credenciales.
    detectadas automáticamente. El script genera un archivo `.npz` con las
    secuencias de landmarks para ambas manos y un archivo `*_labels.json` con el
    mapa gesto→índice, además de un resumen de muestras por seña.
+=======
+   python -m Hellen_model_RN.video_gesture_model.capture_videos <nombre_gesto>
+   ```
+   Presiona `s` para grabar clips de `config.CLIP_DURATION` segundos y `q` para
+   finalizar. Los videos se almacenan en `data/raw_videos/<nombre_gesto>`.
+
+2. **Extracción de landmarks:**
+   ```bash
+   python -m Hellen_model_RN.video_gesture_model.extract_landmarks gesto1 gesto2 ...
+   ```
+   Genera un archivo `.npz` con las secuencias de landmarks para ambas manos y un
+   archivo `*_labels.json` que mapea cada gesto con su índice.
+
 
 3. **Entrenamiento con TensorFlow:**
    ```bash
@@ -45,6 +58,16 @@ credenciales.
    elegir uno desde la terminal. El script carga el mapa de etiquetas, muestra las
    clases disponibles y utiliza un búfer de `sequence_length` frames para predecir
    el gesto actual y reflejarlo en pantalla.
+=======
+   Guarda un `SavedModel` listo para conectarse posteriormente con el frontend.
+
+4. **Inferencia en tiempo real:**
+   ```bash
+   python -m Hellen_model_RN.video_gesture_model.realtime_inference --model-dir data/models/gesture_model_YYYYMMDD_HHMMSS
+   ```
+   Utiliza un búfer de `sequence_length` frames para predecir el gesto actual y
+   mostrarlo en pantalla.
+
 
 5. **Carga opcional a AWS:**
    ```bash

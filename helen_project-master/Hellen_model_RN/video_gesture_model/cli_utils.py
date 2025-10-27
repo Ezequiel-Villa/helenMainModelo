@@ -10,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Iterable, List, Sequence, Tuple
 
-from . import config
+import config
 
 
 GestureInventory = List[Tuple[str, int]]
