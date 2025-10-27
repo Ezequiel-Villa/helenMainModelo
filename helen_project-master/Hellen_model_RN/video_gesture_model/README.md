@@ -10,30 +10,41 @@ credenciales.
 
 1. **Captura de clips:**
    ```bash
-   python -m Hellen_model_RN.video_gesture_model.capture_videos <nombre_gesto>
+   python -m Hellen_model_RN.video_gesture_model.capture_videos [nombre_gesto]
    ```
-   Presiona `s` para grabar clips de `config.CLIP_DURATION` segundos y `q` para
-   finalizar. Los videos se almacenan en `data/raw_videos/<nombre_gesto>`.
+   Si omites el nombre, el script mostrará una tabla con las señas disponibles y
+   podrás elegir una existente o escribir una nueva. Presiona `s` para grabar
+   clips de `config.CLIP_DURATION` segundos y `q` para finalizar. Los videos se
+   almacenan en `data/raw_videos/<nombre_gesto>` y la terminal te indicará cuántos
+   clips llevas en la sesión y el total acumulado para esa seña.
 
 2. **Extracción de landmarks:**
    ```bash
-   python -m Hellen_model_RN.video_gesture_model.extract_landmarks gesto1 gesto2 ...
+   python -m Hellen_model_RN.video_gesture_model.extract_landmarks [gesto1 gesto2 ...]
    ```
-   Genera un archivo `.npz` con las secuencias de landmarks para ambas manos y un
-   archivo `*_labels.json` que mapea cada gesto con su índice.
+   Si no especificas nada, aparecerá un menú para seleccionar una o varias señas
+   detectadas automáticamente. El script genera un archivo `.npz` con las
+   secuencias de landmarks para ambas manos y un archivo `*_labels.json` con el
+   mapa gesto→índice, además de un resumen de muestras por seña.
 
 3. **Entrenamiento con TensorFlow:**
    ```bash
    python -m Hellen_model_RN.video_gesture_model.train_model --dataset path/al/dataset.npz --labels path/a/labels.json
    ```
-   Guarda un `SavedModel` listo para conectarse posteriormente con el frontend.
+   Puedes ajustar las épocas, tamaño de batch, tasa de aprendizaje, unidades LSTM,
+   dropout y tamaño de la capa densa mediante argumentos opcionales. Antes de
+   entrenar, la terminal mostrará un resumen de las muestras por clase y de los
+   hiperparámetros seleccionados. El resultado es un `SavedModel` listo para
+   conectarse posteriormente con el frontend.
 
 4. **Inferencia en tiempo real:**
    ```bash
-   python -m Hellen_model_RN.video_gesture_model.realtime_inference --model-dir data/models/gesture_model_YYYYMMDD_HHMMSS
+   python -m Hellen_model_RN.video_gesture_model.realtime_inference [--model-dir data/models/gesture_model_YYYYMMDD_HHMMSS]
    ```
-   Utiliza un búfer de `sequence_length` frames para predecir el gesto actual y
-   mostrarlo en pantalla.
+   Si no indicas la carpeta del modelo, se listarán los modelos entrenados para
+   elegir uno desde la terminal. El script carga el mapa de etiquetas, muestra las
+   clases disponibles y utiliza un búfer de `sequence_length` frames para predecir
+   el gesto actual y reflejarlo en pantalla.
 
 5. **Carga opcional a AWS:**
    ```bash

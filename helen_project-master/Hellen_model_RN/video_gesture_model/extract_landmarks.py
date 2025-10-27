@@ -20,6 +20,7 @@ import mediapipe as mp
 import numpy as np
 
 from . import config
+from .cli_utils import gesture_inventory, prompt_for_multiple_gestures
 
 
 @dataclass
@@ -34,7 +35,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Extract landmarks from gesture clips")
     parser.add_argument(
         "gestures",
-        nargs="+",
+        nargs="*",
         help="Gesture folder names located under data/raw_videos",
     )
     parser.add_argument(
@@ -108,8 +109,11 @@ def main() -> None:
     """Recorrer los videos de cada gesto y generar el dataset comprimido."""
     args = parse_args()
 
+    gestures = args.gestures or prompt_for_multiple_gestures(gesture_inventory())
+    print(f"Procesando las señas: {', '.join(gestures)}")
+
     samples: List[Sample] = []
-    label_map: Dict[str, int] = {gesture: idx for idx, gesture in enumerate(sorted(args.gestures))}
+    label_map: Dict[str, int] = {gesture: idx for idx, gesture in enumerate(sorted(gestures))}
 
     # Configuramos MediaPipe Hands para detectar hasta dos manos por cuadro.
     hands = mp.solutions.hands.Hands(
@@ -120,16 +124,20 @@ def main() -> None:
     )
 
     try:
-        for gesture in args.gestures:
+        for gesture in gestures:
             gesture_dir = config.VIDEOS_DIR / gesture
             if not gesture_dir.exists():
                 raise FileNotFoundError(f"No se encontró la carpeta de videos para el gesto '{gesture}'.")
 
+            before = len(samples)
             for video_path in sorted(gesture_dir.glob("*.mp4")):
                 # Extraemos los landmarks por frame y los asociamos a la etiqueta correspondiente.
                 features = extract_from_video(video_path, hands, args.sequence_length)
                 samples.append(Sample(features=features, label=label_map[gesture], gesture=gesture))
                 print(f"✅ Procesado {video_path}")
+
+            if len(samples) == before:
+                print(f"⚠️  No se encontraron videos mp4 para la seña '{gesture}'.")
     finally:
         hands.close()
 
@@ -140,6 +148,10 @@ def main() -> None:
     X = np.stack([sample.features for sample in samples])
     y = np.array([sample.label for sample in samples], dtype=np.int64)
 
+    summary: Dict[str, int] = {}
+    for sample in samples:
+        summary[sample.gesture] = summary.get(sample.gesture, 0) + 1
+
     dataset_name = f"{args.output}.npz"
     dataset_path = config.FEATURES_DIR / dataset_name
     np.savez_compressed(dataset_path, X=X, y=y)
@@ -149,6 +161,10 @@ def main() -> None:
     with label_map_path.open("w", encoding="utf-8") as fp:
         json.dump(label_map, fp, ensure_ascii=False, indent=2)
     print(f"🗂️  Mapa de etiquetas guardado en {label_map_path}")
+
+    print("Resumen de muestras por seña:")
+    for gesture, count in sorted(summary.items()):
+        print(f"   • {gesture}: {count} muestra(s)")
 
 
 if __name__ == "__main__":

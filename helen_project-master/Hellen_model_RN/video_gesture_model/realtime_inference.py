@@ -15,6 +15,7 @@ import numpy as np
 import tensorflow as tf
 
 from . import config
+from .cli_utils import list_saved_models, prompt_for_model_dir
 from .extract_landmarks import normalise_landmarks
 
 
@@ -24,7 +25,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--model-dir",
         type=Path,
-        required=True,
+        default=None,
         help="Directory containing the SavedModel produced by train_model.py",
     )
     parser.add_argument(
@@ -49,12 +50,21 @@ def main() -> None:
     """Configurar MediaPipe, cargar el modelo y realizar inferencia cuadro a cuadro."""
     args = parse_args()
 
-    label_path = args.labels or (args.model_dir / "labels.json")
+    model_dir = args.model_dir
+    if model_dir is None:
+        model_dir = prompt_for_model_dir(list_saved_models())
+
+    label_path = args.labels or (model_dir / "labels.json")
     if not label_path.exists():
         raise FileNotFoundError("No se encontró labels.json. Indica la ruta con --labels.")
 
     idx_to_label = load_label_map(label_path)
-    model = tf.keras.models.load_model(args.model_dir)
+    print("Gestos reconocidos por este modelo:")
+    for idx, label in sorted(idx_to_label.items()):
+        print(f"   • {idx}: {label}")
+
+    model = tf.keras.models.load_model(model_dir)
+    print(f"Modelo cargado desde {model_dir}")
 
     # MediaPipe Hands detectará hasta dos manos y devolverá sus landmarks por frame.
     hands = mp.solutions.hands.Hands(
@@ -70,6 +80,11 @@ def main() -> None:
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, config.FRAME_HEIGHT)
 
     buffer: Deque[np.ndarray] = deque(maxlen=args.sequence_length)
+
+    print(
+        "Presiona 'q' en la ventana de video para salir. Umbral de confianza:",
+        args.confidence_threshold,
+    )
 
     try:
         while True:
