@@ -12,8 +12,8 @@ from datetime import datetime
 
 import cv2
 
-from . import config
-
+#from . import config
+import config
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Record gesture clips with OpenCV")
