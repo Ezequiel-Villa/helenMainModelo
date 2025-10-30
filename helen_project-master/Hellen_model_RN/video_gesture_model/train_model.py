@@ -38,38 +38,38 @@ def parse_args() -> argparse.Namespace:
         default=config.FEATURES_DIR / "gesture_dataset_labels.json",
         help="JSON file with the gesture to index mapping.",
     )
-    parser.add_argument("--epochs", type=int, default=60, help="Número de épocas de entrenamiento.")
-    parser.add_argument("--batch-size", type=int, default=16, help="Tamaño del batch durante el entrenamiento.")
+    parser.add_argument("--epochs", type=int, default=70, help="Número de épocas de entrenamiento.")
+    parser.add_argument("--batch-size", type=int, default=24, help="Tamaño del batch durante el entrenamiento.")
     parser.add_argument(
         "--learning-rate",
         type=float,
-        default=1e-3,
+        default=7e-4,
         help="Tasa de aprendizaje del optimizador Adam.",
     )
     parser.add_argument(
         "--validation-split",
         type=float,
-        default=0.2,
+        default=0.25,
         help="Porcentaje de muestras reservado para validación (0-1).",
     )
     parser.add_argument(
         "--lstm-units",
         nargs=2,
         type=int,
-        default=[128, 64],
+        default=[160, 96],
         metavar=("L1", "L2"),
         help="Cantidad de neuronas en las dos capas LSTM (primera y segunda).",
     )
     parser.add_argument(
         "--dense-units",
         type=int,
-        default=64,
+        default=96,
         help="Número de neuronas en la capa densa final previa a la salida.",
     )
     parser.add_argument(
         "--dropout",
         type=float,
-        default=0.3,
+        default=0.45,
         help="Proporción de Dropout aplicada después de cada LSTM.",
     )
     return parser.parse_args()
